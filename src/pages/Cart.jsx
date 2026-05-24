@@ -5,42 +5,14 @@
 import React, { useState } from 'react';
 import Navbar from '../components/layout/Navbar';
 import BackgroundAnimation from '../components/ui/BackgroundAnimation';
+import useCartStore from '../store/cartStore';
 import { Trash2, Minus, Plus, ArrowRight, Zap, Wallet, Banknote } from 'lucide-react';
 
 const Cart = () => {
-    const [cartItems, setCartItems] = useState([
-        {
-            id: 1,
-            name: 'Obsidian Rank (Lifetime)',
-            category: 'Global Server',
-            price: 150000,
-            quantity: 1,
-            image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBZ-tS4x1lwalVdT6N4gXh4oT84jHAenUqcw9q71z_25KBTKkbGQHzkPbBoZNfvqvl4h3ij8Fqqe0prpQyN6Y2dq_dD2PhZfdAmuDYXPuYROX2nkNh7NGIvdPrz_t4BTNNCfO1sFw9v7nxBN1trZN0fUej0aL8W7OQT4C5Owr62VKx5sdDJupe22QBZA7NA1YYnWajLHzacBcul8l9utJQBqEptSuW93Hkd7rch2JW0SHy-U2zrDNbHB8jtggcTA10qjCDNyuziX045',
-            badge: 'VIP',
-        },
-        {
-            id: 2,
-            name: 'Aether Blade Crate x5',
-            category: 'Survival Realm',
-            price: 25000,
-            quantity: 2,
-            pricePerUnit: true,
-            icon: 'swords',
-        },
-    ]);
-
+    const cartItems = useCartStore((state) => state.items);
+    const setQuantity = useCartStore((state) => state.updateQuantity);
+    const removeItem = useCartStore((state) => state.removeItem);
     const [promoCode, setPromoCode] = useState('');
-
-    const updateQuantity = (id, newQuantity) => {
-        if (newQuantity <= 0) return;
-        setCartItems(cartItems.map(item =>
-            item.id === id ? { ...item, quantity: newQuantity } : item
-        ));
-    };
-
-    const removeItem = (id) => {
-        setCartItems(cartItems.filter(item => item.id !== id));
-    };
 
     const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const serviceFee = 2500;
@@ -64,11 +36,15 @@ const Cart = () => {
 
             {/* Main Content */}
             <main className="flex-grow pt-[120px] pb-section-gap px-gutter max-w-[1280px] w-full mx-auto relative z-10">
-                {/* Page Header */}
-                <div className="mb-xl">
-                    <h1 className="font-display-lg text-headline-lg-mobile md:text-headline-lg text-on-background mb-xs">Keranjang Belanja</h1>
-                    <p className="font-body-base text-body-base text-on-surface-variant">Review pesanan Anda sebelum melanjutkan ke pembayaran.</p>
-                </div>
+                {cartItems.length > 0 ? (
+                    <>
+                      {/* Page Header */}
+                      <div className="mb-xl">
+                          <h1 className="font-display-lg text-headline-lg-mobile md:text-headline-lg text-on-background mb-xs">Keranjang Belanja</h1>
+                          <p className="font-body-base text-body-base text-on-surface-variant">Review pesanan Anda sebelum melanjutkan ke pembayaran.</p>
+                      </div>
+                    </>
+                ) : null}
 
                 {cartItems.length > 0 ? (
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-xl">
@@ -82,7 +58,7 @@ const Cart = () => {
                                     <div className="w-24 h-24 rounded bg-surface-container flex-shrink-0 border border-outline-variant overflow-hidden relative">
                                         {item.image ? (
                                             <img
-                                                alt={item.name}
+                                                alt={item.title}
                                                 className="w-full h-full object-cover"
                                                 src={item.image}
                                             />
@@ -102,7 +78,7 @@ const Cart = () => {
                                     <div className="flex-grow">
                                         <div className="flex justify-between items-start mb-sm">
                                             <div>
-                                                <h3 className="font-body-bold text-body-bold text-on-surface">{item.name}</h3>
+                                                <h3 className="font-body-bold text-body-bold text-on-surface">{item.title}</h3>
                                                 <span className="font-label-caps text-label-caps text-primary">{item.category}</span>
                                             </div>
                                             <button
@@ -120,7 +96,7 @@ const Cart = () => {
                                             </div>
                                             <div className="flex items-center bg-surface-container-lowest border border-outline-variant rounded">
                                                 <button
-                                                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                                    onClick={() => setQuantity(item.id, item.quantity - 1)}
                                                     className="px-sm py-1 text-on-surface-variant hover:text-primary transition-colors disabled:opacity-50"
                                                     disabled={item.quantity <= 1}
                                                 >
@@ -128,7 +104,7 @@ const Cart = () => {
                                                 </button>
                                                 <span className="font-code text-code text-on-surface px-sm w-8 text-center">{item.quantity}</span>
                                                 <button
-                                                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                                    onClick={() => setQuantity(item.id, item.quantity + 1)}
                                                     className="px-sm py-1 text-on-surface-variant hover:text-primary transition-colors"
                                                 >
                                                     <Plus size={16} />
@@ -210,7 +186,7 @@ const Cart = () => {
                         <div className="text-center space-y-md">
                             <Zap size={64} className="text-outline-variant mx-auto opacity-50" />
                             <h2 className="font-headline-lg text-headline-lg text-on-surface">Keranjang Kosong</h2>
-                            <p className="font-body-base text-body-base text-on-surface-variant">Belum ada item di keranjang Anda. Mulai berbelanja sekarang!</p>
+                            <p className="font-body-base text-body-base text-on-surface-variant">Keranjang akan muncul setelah Anda menambahkan produk.</p>
                             <a href="/store" className="inline-block bg-primary text-on-primary font-body-bold py-md px-lg rounded-lg hover:shadow-[0_0_15px_rgba(34,211,238,0.5)] transition-all">
                                 Kembali ke Store
                             </a>

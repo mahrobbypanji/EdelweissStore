@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import BackgroundAnimation from '../components/ui/BackgroundAnimation';
 import Minecraft3DViewer from '../components/ui/Minecraft3DViewer';
+import ProductDetailView from '../components/ui/ProductDetailView';
+import useCartStore from '../store/cartStore';
+import { swalSuccess } from '../utils/swalHelper';
 
 /**
  * Halaman Profil (Profile Page)
@@ -47,6 +50,20 @@ export default function Profile() {
     } else if (type === 'increase') {
       setQuantity(quantity + 1);
     }
+  };
+
+  const navigate = useNavigate();
+  const addItemToCart = useCartStore((state) => state.addItem);
+
+  const handleAddToCart = (event, product) => {
+    event?.stopPropagation();
+    addItemToCart(product);
+    const cartCount = useCartStore.getState().items.reduce((sum, item) => sum + item.quantity, 0);
+    swalSuccess(`${product.title} ditambahkan ke keranjang`, `Total ${cartCount} item.`);
+  };
+
+  const handleBuyNow = () => {
+    navigate('/ticket', { state: { product: { ...modalData, quantity } } });
   };
 
   return (
@@ -298,7 +315,16 @@ export default function Profile() {
                 <p className="font-code text-primary text-lg mt-auto">Rp 120.000</p>
                 <div className="flex gap-sm mt-sm">
                   <button className="flex-grow bg-primary-container text-black font-body-bold text-xs py-2 rounded-lg hover:brightness-110 transition-all active:scale-95">Beli Sekarang</button>
-                  <button className="bg-surface-container-high border border-outline-variant text-on-surface p-2 rounded-lg hover:border-primary hover:bg-primary/10 transition-all active:scale-95 flex items-center justify-center">
+                  <button
+                    onClick={(event) => handleAddToCart(event, {
+                      title: 'Elite Vanguard Access',
+                      category: 'PASS',
+                      desc: 'Akses premium ke area eksklusif server dengan berbagai fitur tambahan dan prioritas login. Dapatkan keuntungan eksklusif yang hanya tersedia untuk pemegang pass ini.',
+                      price: 'Rp 120.000',
+                      imgSrc: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAwj9GE6MbW5sYtYes0jsji0bDo7Qnp5HrWydm2aKZnrLIRmevlz0x-YbfuCx8uh3-h6SVOfLUUW5FLE2bzoTY-cGxe1mNsK_aRLOPhEgQF6kmm5aGExwLKmnpc0ws678wxHrz0yLxbAe_sw1BF5ji8rglE4sktR9gZORpVXoG3g4uhjpn-rR9GGHIsMDnS5h7AsIXSAlGXtAZBZpTFbZnTBbzAFdS8ZcgYPo4Kiy1o2PD6iLEkf-Dqlb7YDEZquLIOhhzia4X1w2S9',
+                    })}
+                    className="bg-surface-container-high border border-outline-variant text-on-surface p-2 rounded-lg hover:border-primary hover:bg-primary/10 transition-all active:scale-95 flex items-center justify-center"
+                  >
                     <span className="material-symbols-outlined text-sm">add_shopping_cart</span>
                   </button>
                 </div>
@@ -323,7 +349,16 @@ export default function Profile() {
                 <p className="font-code text-primary text-lg mt-auto">Rp 85.000</p>
                 <div className="flex gap-sm mt-sm">
                   <button className="flex-grow bg-primary-container text-black font-body-bold text-xs py-2 rounded-lg hover:brightness-110 transition-all active:scale-95">Beli Sekarang</button>
-                  <button className="bg-surface-container-high border border-outline-variant text-on-surface p-2 rounded-lg hover:border-primary hover:bg-primary/10 transition-all active:scale-95 flex items-center justify-center">
+                  <button
+                    onClick={(event) => handleAddToCart(event, {
+                      title: 'Neon Cyber Wings',
+                      category: 'COSMETIC',
+                      desc: 'Sayap futuristik dengan efek cahaya neon yang membuat karaktermu tampil beda di lobby.',
+                      price: 'Rp 85.000',
+                      imgSrc: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAoopU5zvOZ3pGNIQ5DIDgP5HFJIhlkdL2MFgCM2qK9-68ns5Awh2QXEVxoWe5dJ7ogem7VConK2EGhts8qonHNnBq8SRBHom9banETf17UkgtBeXb3Uv52rfAtR8bCVO7uCnB88oPI9iXUpBlKlh9AB7Wl9lqUjAJ7s_t3mdOpy6upvNg-CKx87C-seG_4YSbKLZL9fRJZYvpA33EbCluNC-AOxLLPHazVOzQafyU08UUUzOdAEUuKnNlWzw7zBaNhWOg6VyVbRb6R',
+                    })}
+                    className="bg-surface-container-high border border-outline-variant text-on-surface p-2 rounded-lg hover:border-primary hover:bg-primary/10 transition-all active:scale-95 flex items-center justify-center"
+                  >
                     <span className="material-symbols-outlined text-sm">add_shopping_cart</span>
                   </button>
                 </div>
@@ -348,7 +383,16 @@ export default function Profile() {
                 <p className="font-code text-primary text-lg mt-auto">Rp 50.000</p>
                 <div className="flex gap-sm mt-sm">
                   <button className="flex-grow bg-primary-container text-black font-body-bold text-xs py-2 rounded-lg hover:brightness-110 transition-all active:scale-95">Beli Sekarang</button>
-                  <button className="bg-surface-container-high border border-outline-variant text-on-surface p-2 rounded-lg hover:border-primary hover:bg-primary/10 transition-all active:scale-95 flex items-center justify-center">
+                  <button
+                    onClick={(event) => handleAddToCart(event, {
+                      title: 'Monthly Server Booster',
+                      category: 'BOOST',
+                      desc: 'Tingkatkan progres akunmu bulan ini dengan multiplier XP dan resource ganda.',
+                      price: 'Rp 50.000',
+                      imgSrc: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBR6FnePzYHzRyZV_5YpdcOJqrbyusipUko1MGog7WQGV7uJ5tuX3a4-mC6mWwZ16FO0K8wzaoEEPC-xuOihWV4kbauJvbuztcx3cL8yZYayijUKRstUGXk0Rf_cC9785kgGcLGQrWZnNT9Muw01CddaMHuyqljDp8_NPNZIdtEF_O2q3TPuCVIS82hdv4yLsqCxdy01jXn7U4n57K9zQL9SyECNCgP73gtkP8ozgImolt0G9dU9Aqkn6emnHMGS3x8isNAnbQfss7n',
+                    })}
+                    className="bg-surface-container-high border border-outline-variant text-on-surface p-2 rounded-lg hover:border-primary hover:bg-primary/10 transition-all active:scale-95 flex items-center justify-center"
+                  >
                     <span className="material-symbols-outlined text-sm">add_shopping_cart</span>
                   </button>
                 </div>
@@ -373,7 +417,16 @@ export default function Profile() {
                 <p className="font-code text-primary text-lg mt-auto">Rp 35.000</p>
                 <div className="flex gap-sm mt-sm">
                   <button className="flex-grow bg-primary-container text-black font-body-bold text-xs py-2 rounded-lg hover:brightness-110 transition-all active:scale-95">Beli Sekarang</button>
-                  <button className="bg-surface-container-high border border-outline-variant text-on-surface p-2 rounded-lg hover:border-primary hover:bg-primary/10 transition-all active:scale-95 flex items-center justify-center">
+                  <button
+                    onClick={(event) => handleAddToCart(event, {
+                      title: 'Custom Title Tag',
+                      category: 'ITEM',
+                      desc: "Tag eksklusif 'The Legend' yang akan muncul secara permanen di samping namamu.",
+                      price: 'Rp 35.000',
+                      imgSrc: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBMOTEd3UlpQOhUfcTK-WHedxcE-eVR4ZB1ic6qCq46cRRcMakl23E2PAOkA899HpJw-l6BB14Drivpo0WLY5CMvYmLA0cm8uf2W3V9WM-EkzuQW4RMf2t39nyNg43g5fPyenHC08ENz60L0QmlLd7TSbbwdsct8P7WBXDGDEHKOSluVIpPbKk6cC-BLDNaRCLiHzfwV0lfNeHDZlKYKfEuCkEk4S-OEY12ieboeaMtu8of0AnaDYb6z02f7T_pWeazud5MgOG3dNmk',
+                    })}
+                    className="bg-surface-container-high border border-outline-variant text-on-surface p-2 rounded-lg hover:border-primary hover:bg-primary/10 transition-all active:scale-95 flex items-center justify-center"
+                  >
                     <span className="material-symbols-outlined text-sm">add_shopping_cart</span>
                   </button>
                 </div>
@@ -399,7 +452,16 @@ export default function Profile() {
                 <p className="font-code text-primary text-lg mt-auto">Rp 75.000</p>
                 <div className="flex gap-sm mt-sm">
                   <button className="flex-grow bg-primary-container text-black font-body-bold text-xs py-2 rounded-lg hover:brightness-110 transition-all active:scale-95">Beli Sekarang</button>
-                  <button className="bg-surface-container-high border border-outline-variant text-on-surface p-2 rounded-lg hover:border-primary hover:bg-primary/10 transition-all active:scale-95 flex items-center justify-center">
+                  <button
+                    onClick={(event) => handleAddToCart(event, {
+                      title: 'Mystery Loot Box',
+                      category: 'LOOT',
+                      desc: 'Item acak tingkat Epic hingga Legendary menantimu. Bukalah dan dapatkan kejutan spesial.',
+                      price: 'Rp 75.000',
+                      imgSrc: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD0NZlInSSxXTNLYnZCiWsX75UjHoltQ6YCsJsMJ-VEtSLK2X0ca42Wgf5eO0vY0cP0Fd5J8Aa_DFJh6yeI-U5PDHlS1uGcZaM5C8gx9X-PofJFubDc1V5KlJlh0sykd4gZpfjbVI8d5qVGJviaIg6SCwngAQwGZSpsk40CVy62w8LVDtI5Yi2cOuzLzi7CVQXGyYSfMTBDlAaNF6A6ZpJNmDxjYjIoGjSfcPNMJi-8S6Os41hcWuSRm28LWX0683b2EEYPQk78Gd_M',
+                    })}
+                    className="bg-surface-container-high border border-outline-variant text-on-surface p-2 rounded-lg hover:border-primary hover:bg-primary/10 transition-all active:scale-95 flex items-center justify-center"
+                  >
                     <span className="material-symbols-outlined text-sm">add_shopping_cart</span>
                   </button>
                 </div>
@@ -422,88 +484,18 @@ export default function Profile() {
           ></div>
           
           {/* Konten Modal */}
-          <div className="relative bg-surface-container-high w-full max-w-5xl max-h-[90vh] overflow-hidden rounded-xl border border-outline-variant shadow-2xl transition-all duration-300 transform scale-100 opacity-100 flex flex-col md:flex-row">
-            
-            {/* Tombol Tutup */}
-            <button 
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-surface-container-highest/50 text-on-surface hover:text-primary transition-colors" 
-              onClick={handleCloseModal}
-            >
-              <span className="material-symbols-outlined">close</span>
-            </button>
-            
-            {/* Sisi Kiri: Gambar Produk */}
-            <div className="w-full md:w-1/2 bg-surface-container-lowest p-lg flex items-center justify-center border-r border-outline-variant overflow-y-auto">
-              <div className="relative group w-full aspect-square flex items-center justify-center bg-surface/50 rounded-lg overflow-hidden">
-                <img alt={modalData.title} className="w-full h-full object-contain" src={modalData.imgSrc} />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
-              </div>
+          <div className="relative w-full max-w-5xl max-h-[90vh] overflow-hidden rounded-xl border border-outline-variant shadow-2xl transition-all duration-300 transform scale-100 opacity-100 bg-surface-container-high">
+            <div className="relative h-full overflow-y-auto">
+              <ProductDetailView
+                product={modalData}
+                quantity={quantity}
+                onQuantityChange={handleQuantityChange}
+                onAddToCart={(event) => handleAddToCart(event, { ...modalData, quantity })}
+                onBuyNow={handleBuyNow}
+                onClose={handleCloseModal}
+                isModal
+              />
             </div>
-            
-            {/* Sisi Kanan: Detail Produk & Checkout */}
-            <div className="w-full md:w-1/2 p-xl flex flex-col gap-lg bg-surface/30 overflow-y-auto">
-              <div>
-                <span className="bg-primary/10 text-primary border border-primary/30 font-label-caps text-[10px] px-sm py-[4px] rounded-sm tracking-widest inline-block">
-                  {modalData.category}
-                </span>
-                <h2 className="font-headline-lg text-3xl text-on-surface mt-md">{modalData.title}</h2>
-              </div>
-              
-              <div className="flex flex-col gap-sm pb-lg border-b border-outline-variant/30">
-                <p className="font-code text-primary text-4xl font-bold">{modalData.price}</p>
-                <div className="flex items-center gap-xs text-tertiary">
-                  <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                  <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                  <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                  <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                  <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                  <span className="text-xs font-body-base ml-xs text-on-surface-variant">(4.9/5 • 120+ Terjual)</span>
-                </div>
-              </div>
-              
-              <div className="flex-grow">
-                <h3 className="font-body-bold text-on-surface text-sm uppercase tracking-wider mb-sm">Deskripsi Produk</h3>
-                <p className="text-on-surface-variant text-base leading-relaxed">{modalData.desc}</p>
-              </div>
-              
-              <div className="flex flex-col gap-md">
-                <div className="flex items-center gap-lg">
-                  <span className="text-sm text-outline-variant font-label-caps uppercase">Kuantitas</span>
-                  <div className="flex items-center border border-outline-variant rounded-lg overflow-hidden bg-surface-container-low">
-                    <button 
-                      className="px-4 py-2 hover:bg-surface-container-highest transition-colors text-primary" 
-                      onClick={() => handleQuantityChange('decrease')}
-                    >
-                      -
-                    </button>
-                    <input 
-                      className="w-16 bg-transparent border-none text-center focus:ring-0 text-sm font-body-bold text-on-surface" 
-                      min="1" 
-                      type="number" 
-                      value={quantity} 
-                      readOnly
-                    />
-                    <button 
-                      className="px-4 py-2 hover:bg-surface-container-highest transition-colors text-primary" 
-                      onClick={() => handleQuantityChange('increase')}
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-                
-                <div className="flex gap-md pt-lg border-t border-outline-variant/30">
-                  <button className="flex-1 bg-surface-container-highest text-on-surface border border-outline-variant font-body-bold py-4 rounded-xl hover:border-primary transition-all flex items-center justify-center gap-md active:scale-95">
-                    <span className="material-symbols-outlined">add_shopping_cart</span>
-                    <span>Tambah Keranjang</span>
-                  </button>
-                  <button className="flex-1 bg-primary text-on-primary font-body-bold py-4 rounded-xl hover:brightness-110 transition-all glowing-primary active:scale-95">
-                    Beli Sekarang
-                  </button>
-                </div>
-              </div>
-            </div>
-            
           </div>
         </div>
       )}

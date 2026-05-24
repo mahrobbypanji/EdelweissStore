@@ -2,7 +2,10 @@ import React from 'react';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import ProductCard from '../components/ui/ProductCard';
+import useCartStore from '../store/cartStore';
+import { swalSuccess } from '../utils/swalHelper';
 import BackgroundAnimation from '../components/ui/BackgroundAnimation';
+import { useNavigate } from 'react-router-dom';
 
 // Data produk untuk Store (Bisa lo pindahin ke src/data/productsData.js kalau mau makin rapi)
 const featuredRanks = [
@@ -44,6 +47,8 @@ const itemsCosmetics = [
  * Sekarang sudah menggunakan render dinamis dengan komponen ProductCard.
  */
 export default function Store() {
+  const navigate = useNavigate();
+
   return (
     <div className="text-on-background min-h-screen flex flex-col font-body-base antialiased text-white">
       <BackgroundAnimation variant="v1" />
@@ -136,7 +141,14 @@ export default function Store() {
                     price={rank.price}
                     imgSrc={rank.imgSrc}
                     badge={rank.badge}
-                    onClick={() => console.log(`Buka modal untuk ${rank.title}`)}
+                    onClick={() => navigate('/product', { state: { product: { title: rank.title, category: rank.category, desc: rank.desc, price: rank.price, imgSrc: rank.imgSrc } } })}
+                    onAdd={() => {
+                      const product = { title: rank.title, category: rank.category, desc: rank.desc, price: rank.price, imgSrc: rank.imgSrc };
+                      useCartStore.getState().addItem(product);
+                      const cartCount = useCartStore.getState().items.reduce((sum, item) => sum + item.quantity, 0);
+                      swalSuccess(`${rank.title} ditambahkan ke keranjang`, `Total ${cartCount} item.`);
+                    }}
+                    onBuy={() => navigate('/product', { state: { product: { title: rank.title, category: rank.category, desc: rank.desc, price: rank.price, imgSrc: rank.imgSrc } } })}
                   />
                 ))}
               </div>
@@ -158,7 +170,14 @@ export default function Store() {
                     price={item.price}
                     imgSrc={item.imgSrc}
                     badge={item.badge}
-                    onClick={() => console.log(`Buka modal untuk ${item.title}`)}
+                    onClick={() => navigate('/product', { state: { product: { title: item.title, category: item.category, desc: item.desc, price: item.price, imgSrc: item.imgSrc } } })}
+                    onAdd={() => {
+                      const product = { title: item.title, category: item.category, desc: item.desc, price: item.price, imgSrc: item.imgSrc };
+                      useCartStore.getState().addItem(product);
+                      const cartCount = useCartStore.getState().items.reduce((sum, i) => sum + i.quantity, 0);
+                      swalSuccess(`${item.title} ditambahkan ke keranjang`, `Total ${cartCount} item.`);
+                    }}
+                    onBuy={() => navigate('/product', { state: { product: { title: item.title, category: item.category, desc: item.desc, price: item.price, imgSrc: item.imgSrc } } })}
                   />
                 ))}
               </div>

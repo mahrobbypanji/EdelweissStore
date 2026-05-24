@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import useCartStore from '../../store/cartStore';
 
 /**
  * Komponen Navigasi Utama (Navbar)
@@ -7,6 +8,7 @@ import { Link, useLocation } from 'react-router-dom';
  */
 export default function Navbar() {
   const location = useLocation();
+  const cartCount = useCartStore((state) => state.items.reduce((sum, item) => sum + item.quantity, 0));
 
   // Fungsi pembantu untuk menentukan gaya CSS menu yang sedang aktif
   const getNavStyle = (path) => {
@@ -44,11 +46,16 @@ export default function Navbar() {
         <div className="flex items-center gap-md text-primary dark:text-primary">
           <Link 
             to="/cart"
-            className="hover:bg-surface-container-highest/50 rounded-lg transition-all duration-200 p-sm active:scale-95 transition-transform duration-100"
+            className="relative hover:bg-surface-container-highest/50 rounded-lg transition-all duration-200 p-sm active:scale-95 transition-transform duration-100"
             aria-label="Shopping Cart"
             title="Keranjang Belanja"
           >
             <span className="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[18px] h-5 rounded-full bg-error text-on-error text-[10px] font-bold flex items-center justify-center px-1">
+                {cartCount > 9 ? '9+' : cartCount}
+              </span>
+            )}
           </Link>
           
           <Link 

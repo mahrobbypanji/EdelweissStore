@@ -12,6 +12,9 @@ import SiteConfig from './pages/SiteConfig';
 import Help from './pages/Help';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
+import TicketDetail from './pages/TicketDetail';
+import ProductDetail from './pages/ProductDetail';
+// No direct toast provider needed: notifications now use SweetAlert2 helper
 
 /**
  * Komponen Utama Aplikasi (App)
@@ -40,6 +43,8 @@ function App() {
         {/* Rute untuk halaman profil user (Profile) */}
         <Route path="/profile" element={<Profile />} />
         <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/ticket" element={<TicketDetail />} />
+        <Route path="/product" element={<ProductDetail />} />
         {/* Rute untuk halaman panel admin (Admin Panel) */}
         <Route path="/adminpanel" element={<AdminPanel />} />
         <Route path="/admin" element={<AdminPanel />} />

@@ -5,7 +5,7 @@ import React from 'react';
  * Menampilkan ringkasan produk dengan desain cyberpunk dan efek glassmorphism.
  * Komponen ini menerima data produk melalui properti (props) untuk penggunaan berulang.
  */
-export default function ProductCard({ title, category, desc, price, imgSrc, badge, onClick }) {
+export default function ProductCard({ title, category, desc, price, imgSrc, badge, onClick, onBuy, onAdd }) {
   return (
     <div 
       className="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden flex flex-col group hover:-translate-y-1 transition-transform duration-300 relative shadow-[inset_0_0_20px_rgba(34,211,238,0.02)] cursor-pointer"
@@ -31,10 +31,22 @@ export default function ProductCard({ title, category, desc, price, imgSrc, badg
         <p className="text-on-surface-variant text-xs line-clamp-2">{desc}</p>
         <p className="font-code text-primary text-lg mt-auto">{price}</p>
         <div className="flex gap-sm mt-sm">
-          <button className="flex-grow bg-primary-container text-black font-body-bold text-xs py-2 rounded-lg hover:brightness-110 transition-all active:scale-95">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onBuy) onBuy(e);
+            }}
+            className="flex-grow bg-primary-container text-black font-body-bold text-xs py-2 rounded-lg hover:brightness-110 transition-all active:scale-95"
+          >
             Beli Sekarang
           </button>
-          <button className="bg-surface-container-high border border-outline-variant text-on-surface p-2 rounded-lg hover:border-primary hover:bg-primary/10 transition-all active:scale-95 flex items-center justify-center">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onAdd) onAdd(e);
+            }}
+            className="bg-surface-container-high border border-outline-variant text-on-surface p-2 rounded-lg hover:border-primary hover:bg-primary/10 transition-all active:scale-95 flex items-center justify-center"
+          >
             <span className="material-symbols-outlined text-sm">add_shopping_cart</span>
           </button>
         </div>
